@@ -6,6 +6,7 @@ __pycache__/
 **/__pycache__/
 
 # datasets
+dat/**
 dat/nov21pub.csv
 dat/nov21pub.dat
 data/

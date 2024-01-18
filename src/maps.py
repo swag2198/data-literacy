@@ -1,3 +1,17 @@
+"""
+A helper file that contains dictionaries for mapping various attributes to their corresponding labels.
+Also contains some useful constants that hold important column names.
+
+"""
+
+PERSONTYPE = 'PRPERTYP'
+SEX = 'PESEX'
+AGE = 'PRTAGE'
+STATECODE = 'GESTFIPS'
+SOCIALMEDIA = 'PESOCIAL'
+TEXTING = 'PETEXTIM'
+EMAIL = 'PEEMAIL'
+
 StatesMap = {1: 'AL',
              30: 'MT',
              2: 'AK',
@@ -146,4 +160,27 @@ ind = {'Construction and mining': [1, 2, 3],
         'Leisure and hospitality': [11],
         'Public administration': [13],
         'Armed forces': [14]}
+
+#what concerns (you/members of this household) the most when it comes to online privacy and security risks?
+CONCERNS_MAP = {
+    'HEPSCON1': 'Identity theft',
+    'HEPSCON2': 'Credit card or banking fraud',
+    'HEPSCON3': 'Data collection or tracking by online services',
+    'HEPSCON4': 'Data collection or tracking by government',
+    'HEPSCON5': 'Loss of control over personal data such as email or social network profiles',
+    'HEPSCON6': 'Threats to personal safety, such as online harassment, stalking, or cyberbullying',
+    'HEPSCON8': 'Other concerns'
+}
+
+# During the past year, have concerns about privacy or security STOPPED (you/anyone in this household)
+# from doing any of these activities online
+ACTIVITIES_MAP = {
+    'HEPSPRE1': 'Conducting financial transactions such as banking, investing, or paying bills online?',
+    'HEPSPRE2': 'Buying goods or services online?',
+    'HEPSPRE3': 'Posting photos, status updates, or other information on social networks?',
+    'HEPSPRE4': 'Expressing an opinion on a controversial or political issue on a blog or social network, or in a forum, email or any other venue?',
+    'HEPSPRE5': 'Searching for information using a platform such as Google Search, Yahoo Search, Microsoft Bing, or another web search engine?'
+}
+
+
 

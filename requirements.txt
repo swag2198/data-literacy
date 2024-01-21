@@ -8,3 +8,4 @@ nbformat==5.9.2
 xgboost==2.0.3
 bayesian-optimization==1.4.3
 seaborn==0.13.1
+tueplots==0.0.12

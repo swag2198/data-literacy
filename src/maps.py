@@ -182,17 +182,25 @@ ACTIVITIES_MAP = {
     'HEPSPRE5': 'Searching for information using a platform such as Google Search, Yahoo Search, Microsoft Bing, or another web search engine?'
 }
 
+ACTIVITIES_MAP_SHORT = {
+    'HEPSPRE1': 'Financial transactions',
+    'HEPSPRE2': 'E-commerce',
+    'HEPSPRE3': 'Posting photos / other information on social networks?',
+    'HEPSPRE4': 'Expressing an opinion',
+    'HEPSPRE5': 'Searching for information using a platform such as Google Search, Yahoo Search, Microsoft Bing, or another web search engine?'
+}
+
 feat_dict = {
     
     'HEPSPRE1' : 
     
     {
         'HENOHM8' : 'Safety',
-        'PUBUSCK2' : 'Work',
+        'PUBUSCK2' : 'Work', # Family business realted
         'PULAYCK1' : 'Work', #NOTE: Some work related thing, layoff related (I checked similar prefixes)
-        'PEDWLKO' : 'Work',
+        'PEDWLKO' : 'Work', # Did you look for work in the last 12 months
         'HEPSCYBA' : 'Safety', #Affected by online security breach?
-        'PEPDEMP2' : 'Work',
+        'PEPDEMP2' : 'Work', # Usually paid employees?
         'HUBUSL3' : 'Work', #Have a business or a farm
         'HEEVRHOM' : 'Digital access', #Ever used the Internet from home?
         'HEHOMTE3' : 'Digital access', #Using internet via dial-up?
@@ -213,7 +221,7 @@ feat_dict = {
     'HEPSPRE2':
     {
         'HEHOMTE3' : 'Digital access', #Using internet via dial-up?
-        'HEPRINOH' : 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        'HEPRINOH' : 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
         'HEPSCYBA' : 'Safety', #Affected by online security breach?
         'HXTENURE' : 'House', #Owned or rented house
         'HXHNETQL' : 'Digital access', #Access the Internet from their homes, other than a mobile data plan.
@@ -228,7 +236,7 @@ feat_dict = {
         'HENOTV8' : 'Digital access' , #Do dot subscibe to TV due not having a TV or broken TV
         'HEDEVSTA' : 'Digital access', #How often is internet inaccessible?
         'HXINWORK' : 'Digital access', #Use internet at work?
-        'HENOHM3' : 'Digital access', #Don't use intenet at home? ->Not worth the cost
+        'HENOHM3' : 'Financial', #Don't use intenet at home? ->Not worth the cost
         'PXINSCHL' : 'Digital access', #Use internet at school(again-> Look HEINSCHL)
         'PXNETCK2' : 'Digital access', #Who uses internet from any location, for any purpose.
         'PRHERNAL': 'Financial', # HOURLY EARNINGS
@@ -240,14 +248,14 @@ feat_dict = {
         
         'HXEVRHOM' : 'Digital access', #Ever used the Internet from home?
         'PREXPLF' : 'Work', #EXPERIENCED LABOR FORCE EMPLOYMENT
-        'HXPRINOH' : 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        'HXPRINOH' : 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
         'HEPSCYBA' : 'Safety', #Affected by online security breach?
         'HXTENURE' : 'House', #Owned or rented house
         'HENOHM5' : 'Digital access', #Do not use the internet at home? ->No computing device, or device inadequate or broken
         'PRDTCOW2' : 'Work', #DETAILED CLASS OF WORKER RECODE - JOB 2
         'PXDWLKO' : 'Work', #Did you look for work at any time in the last 12 months?
         'HEHOMTE3' : 'Digital access', #Using internet via dial-up?
-        'HEPRINOH' : 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        'HEPRINOH' : 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
         'HXHNETQL' : 'Digital access', #Access the Internet from their homes, other than a mobile data plan.
         'PXINOTHR' : 'Digital access', #Who uses internet at other places not covered in the survey
         'HENOHM4' : 'Digital access', #Dont use internet at home -> Can use it elsewhere
@@ -264,23 +272,23 @@ feat_dict = {
 
     'HEPSPRE4': {
         "PXMLR"    : 'Work', #Major Labor Force Recode
-        "HENOHM10" : 'Digital access', # reason for not using internet at home - some other reason
-        "HXPRINOH" : 'Digital access', # reason for not using internet at home - most important reason
-        "HXNOHM1"  : 'Digital access', # # reason for not using internet at home - don't need it
+        "HENOHM10" : 'Online activities', # reason for not using internet at home - some other reason
+        "HXPRINOH" : 'Online activities', # reason for not using internet at home - most important reason
+        "HXNOHM1"  : 'Online activities', # # reason for not using internet at home - don't need it
         "HEPSCYBA" : 'Safety', #Affected by online security breach?
         "PRSJMJ"   : 'Work', # single job or multiple jobs
         "PTNMEMP2" : 'Work', # NOTE: Can also be financial # number of paid employees.
-        "HEMEDINF" : 'Digital access', # Do you use the internet to get information about health or medical topics?
+        "HEMEDINF" : 'Online activities', # Do you use the internet to get information about health or medical topics?
         "PEDWLKWK" : 'Work', # since you left your job, have you looked for work?
         "HENOTV10" : 'Digital access', #Do dot subscibe to TV due to poor customer servcie.
         "PXLKLL2O" : 'Work', # Did you lose your job or quit, or was it temporary?
-        "PXEGOVTS" : 'Digital access', # use of internet for accessing govt services like regestering to vote, paying taxes, etc.
+        "PXEGOVTS" : 'Online activities', # use of internet for accessing govt services like regestering to vote, paying taxes, etc.
         "HENOTV7"  : 'Digital access', # Do dot subscibe to TV since not available in area
         "HENOTV5"  : 'Digital access', # Do dot subscibe to TV since can watch at another location
         "HXINOTHR" : 'Digital access', # use internet at some other location
         "PXIO2ICD" : 'Work', # industry code of job 2
         "HENOHM7"  : 'Safety', # Do not use internet at home -> privacy or cybersecurity concerns
-        "HEMEDREC" : 'Digital access', # Do you use the internet to get information about health (/insurance) records?
+        "HEMEDREC" : 'Online activities', # Do you use the internet to get information about health (/insurance) records?
         "PXERNHRY" : 'Financial', # hourly/non-hourly earnings
         "PXDISREM" : 'Disability', 
     },
@@ -295,7 +303,7 @@ feat_dict = {
         'PELAYLK'  : 'Work', # even though you are to be called back to work, have you been looking for work?
         'HXEVRHOM' : 'Digital access', #Ever used the Internet from home?
         'PXDISEYE' : 'Disability', # is blind or difficulty seeing even when wearing glasses
-        'HEPRINOH' : 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        'HEPRINOH' : 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
         'HENOTV9'  : 'Digital access', # moving or in process of moving
         'HEPSCYBA' : 'Safety', # Affected by online security breach?
         'PULAYCK2' : 'Work', # dependent layoff
@@ -312,14 +320,14 @@ feat_dict = {
         'HEPSCYBA' : 'Safety', # Affected by online security breach?
         "HENOHM7"  : 'Safety', # Do not use internet at home -> privacy or cybersecurity concerns
         'HEPREVTV' : 'Digital access', #Subscription to cable tv/satellite tv
-        'HENOHM3' : 'Digital access', #Don't use intenet at home? ->Not worth the cost
+        'HENOHM3' : 'Financial', #Don't use intenet at home? ->Not worth the cost
         'PXDISPHY' : 'Disability', #HAVE SERIOUS DIFFICULTY WALKING OR CLIMBING STAIRS?
         'HENOTV9'  : 'Digital access', # moving or in process of moving
-        "HEMEDREC" : 'Digital access', # Do you use the internet to get information about health (/insurance) records?
-        'HENOTV4' : 'Digital access', #do not subscribe to a service providing access to TV channels-> Not worth the cost
+        "HEMEDREC" : 'Online activities', # Do you use the internet to get information about health (/insurance) records?
+        'HENOTV4' : 'Financial', #do not subscribe to a service providing access to TV channels-> Not worth the cost
         'HENOHM1' : 'Digital access', #do not use the Internet at home->Don't need it or not interested
-        "HEMEDINF" : 'Digital access', # Do you use the internet to get information about health or medical topics?
-        'HEPRINOH' : 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        "HEMEDINF" : 'Online activities', # Do you use the internet to get information about health or medical topics?
+        'HEPRINOH' : 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
         'PXINLICO' : 'Digital access', #Who uses the Internet at a library,community center, park, or other public place?
         'HENOTV6' : 'Digital access', #Do no subsribe to TV service-> Can watch using an antenna.
         'HEHOMTE3' : 'Digital access', #Using internet via dial-up?
@@ -333,7 +341,7 @@ feat_dict = {
     
     'HEPSCON2':{
         'HEPSCYBA' : 'Safety', # Affected by online security breach?
-        "HEMEDINF" : 'Digital access', # Do you use the internet to get information about health or medical topics?
+        "HEMEDINF" : 'Online activities', # Do you use the internet to get information about health or medical topics?
         "PXDISREM" : 'Disability',
         'PXERN' : 'Work', #Weekly overtime amount
         'PXJHWANT' : 'Work', #DO YOU INTEND TO LOOK FOR WORK DURING THE NEXT 12 MONTHS?
@@ -341,14 +349,14 @@ feat_dict = {
         'HEEVRHOM' : 'Digital access', #Ever used the Internet from home?
         'PXHRUSLT' : 'Work', #Working hours per week
         'PXDISPHY' : 'Disability', #HAVE SERIOUS DIFFICULTY WALKING OR CLIMBING STAIRS?
-        "HEMEDREC" : 'Digital access', # Do you use the internet to get information about health (/insurance) records?
+        "HEMEDREC" : 'Online activities', # Do you use the internet to get information about health (/insurance) records?
         'HEPREVTV' : 'Digital access', #Subscription to cable tv/satellite tv
         'PRHERNAL': 'Financial', # HOURLY EARNINGS
-        'PXPUBLISH' : 'Digital access', #Posted online in the past 6 months
+        'PXPUBLISH' : 'Online activities', #Posted online in the past 6 months
         'PREMP' : 'Work', #Employed persons
         'HUBUSL2'  : 'Financial', # Have a business or a farm
         'HEINTRAV' : 'Digital access', #use the Internet while traveling between places?
-        'HENOTV4' : 'Digital access', #do not subscribe to a service providing access to TV channels-> Not worth the cost
+        'HENOTV4' : 'Financial', #do not subscribe to a service providing access to TV channels-> Not worth the cost
         'PXMPHONE' : 'Digital access', #Who uses a cellular phone or smartphone?
         'HXDEVSTA' : 'Digital access', #How often is the internet inaccessible?
         'PXLAPTOP' : 'Digital access', #Use a laptop?
@@ -358,22 +366,22 @@ feat_dict = {
         'PXMLR' : 'Work', #Major Labor Force Recode
         'HUBUSL3' : 'Financial', # Have a business or a farm
         'PULAYCK3' : 'Work',
-        'HENOHM3' : 'Digital access', #Don't use intenet at home? ->Not worth the cost
+        'HENOHM3' : 'Financial', #Don't use intenet at home? ->Not worth the cost
         'HENOHM5' : 'Digital access', #Do not use the internet at home? ->No computing device, or device inadequate or broken
         'HENOTV8' : 'Digital access' , #Do dot subscibe to TV due not having a TV or broken TV
         'HENOTV10' : 'Digital access', #Do dot subscibe to TV due to poor customer servcie.
-        "HEMEDINF" : 'Digital access', # Do you use the internet to get information about health or medical topics?
+        "HEMEDINF" : 'Online activities', # Do you use the internet to get information about health or medical topics?
         'HEPSCYBA' : 'Safety', #Affected by online security breach?
-        'HXMEDINF' : 'Digital access', #Research health info online
+        'HXMEDINF' : 'Online activities', #Research health info online
         "PXDISREM" : 'Disability', 
         'PUJHCK2' : 'Work',
-        "HEMEDREC" : 'Digital access', # Do you use the internet to get information about health (/insurance) records?
+        "HEMEDREC" : 'Online activities', # Do you use the internet to get information about health (/insurance) records?
         'PEPDEMP2' : 'Work',
         'PRDTIND2' : 'Work', #Industry code
         'PRUNEDUR' : 'Work', #Duration of unemployment for layoff
         'HEINOTHR' : 'Digital access', #use the Internet at some other location we haven't covered yet?
         'PXINLICO' : 'Digital access', #Who uses the Internet at a library,community center, park, or other public place?
-        'HENOTV4' : 'Digital access', #do not subscribe to a service providing access to TV channels-> Not worth the cost   
+        'HENOTV4' : 'Financial', #do not subscribe to a service providing access to TV channels-> Not worth the cost   
         'HEINTRAV': 'Digital access', #use the Internet while traveling between places?'
     },
     
@@ -387,11 +395,11 @@ feat_dict = {
         'PXINOTHR' : 'Digital access', #Who uses internet at other places not covered in the survey
         'PXNETCK2' : 'Digital access', #Who uses internet from any location, for any purpose.
         'HENOHM1' : 'Digital access', #do not use the Internet at home->Don't need it or not interested
-        "HEMEDINF" : 'Digital access', # Do you use the internet to get information about health or medical topics?
+        "HEMEDINF" : 'Online activities', # Do you use the internet to get information about health or medical topics?
         'HXWEARAB' : 'Digital access', #Use a wearable smart device?
         'PXHSPNON': 'Demographic', #Hispanic?
         'PUHRCK5' : 'Work',
-        'HENOTV4' : 'Digital access', #do not subscribe to a service providing access to TV channels-> Not worth the cost
+        'HENOTV4' : 'Financial', #do not subscribe to a service providing access to TV channels-> Not worth the cost
         'PELKFTO' : 'Work', #Jobseeker status
         'PELKLL1O' : 'Work', #What were you doing before you started looking for work
         'HENOTV11' : 'Digital access', #Do dot subscibe to TV due to poor quality
@@ -405,16 +413,16 @@ feat_dict = {
         'HXNOHM1' : 'Digital access', # # reason for not using internet at home - don't need it
         'HXEVRHOM': 'Digital access', #Ever used the Internet from home?
         'PRCITFLG': 'Demographic', #CITIZENSHIP ALLOCATION FLAG
-        'HEMEDINF': 'Digital access', # Do you use the internet to get information about health or medical topics?
+        'HEMEDINF': 'Online activities', # Do you use the internet to get information about health or medical topics?
         'HXTENURE': 'House', #Owned or rented house
         'HEPSCYBA': 'Safety', #Affected by online security breach?
         'HENOTV7' : 'Digital access', # Do dot subscibe to TV since not available in area
         'PXJHWANT': 'Work', #DO YOU INTEND TO LOOK FOR WORK DURING THE NEXT 12 MONTHS?
         'PULAYCK3': 'Work', #something layoff related
-        'PXGAMING': 'Digital access', # What about playing video games online, whether on a smartphone, console, PC, or any other computing device
-        'HXPRINOH': 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        'PXGAMING': 'Online activities', # What about playing video games online, whether on a smartphone, console, PC, or any other computing device
+        'HXPRINOH': 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
         'HENOTV10': 'Digital access', #Do dot subscibe to TV due to poor customer servcie.
-        'HEMEDREC': 'Digital access', # Do you use the internet to get information about health (/insurance) records?
+        'HEMEDREC': 'Online activities', # Do you use the internet to get information about health (/insurance) records?
         'HUBUSL3' : 'Financial', # Have a business or a farm
         'HXTELAVL': 'Digital access', #iS THERE A TELEPHONE ELSEWHERE O
         'PXERNUOT': 'Work', #Do you usually receive overtime pay, tips or commisions?
@@ -434,16 +442,16 @@ feat_dict = {
         'PXPAR2'  : 'Demographic', # LINE NUMBER OF FIRST PARENT (ALWAYS THE FATHER, IF PRESENT. WILL BE A FEMALE IF THE PARENTS ARE SAME SEX.)
         'HEEVRHOM': 'Digital access', # (Have you/Has anyone in this household) ever used the Internet from home?
         'HEINSCHL': 'Digital access', #Use internet at school?
-        'HEMEDINF': 'Digital access', # Do you use the internet to get information about health or medical topics?
-        'HXMEDREC': 'Digital access',# What about accessing health records or health  insurance records online.
+        'HEMEDINF': 'Online activities', # Do you use the internet to get information about health or medical topics?
+        'HXMEDREC': 'Online activities',# What about accessing health records or health  insurance records online.
         'HXMPHONE': 'Digital access', #Use a smartphone?
         'PXINOTHR': 'Digital access', #Who uses internet at other places not covered in the survey
         'PUHRCK12': 'Work', 
         'HEDEVSTA': 'Digital access', #How often is internet inaccessible?
         'HENOTV6' : 'Digital access', #Do no subsribe to TV service-> Can watch using an antenna.
-        'HEHNETQL': 'Digital access',
-        'HEHNETST': 'Digital access',
-        'HXPRINOH': 'Digital access', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
+        'HEHNETQL': 'Digital access', #does internet connection at home fill your needs.
+        'HEHNETST': 'Financial',  # Temporarily lose internet access due to non-payment
+        'HXPRINOH': 'Online activities', #Of the reasons you just listed for not going online at home, which (do you/does your household) consider to be the most important?
     },
    
     'HEPSCON8': {
@@ -463,10 +471,25 @@ feat_dict = {
         'PEAFWHN4': 'Work', # WHEN DID YOU SERVE?
         'HENOTV12': 'Digital access', #Do no subsribe to TV service
         'HXDESKTP': 'Digital access', # use a desktop computer
-        'HXHNETST': 'Digital access',
+        'HXHNETST': 'Financial',
         'PXESRVCS': 'Work', # What about offering (your/his/her) own  services for sale via the Internet?
         'PXDW4WK' : 'Work', # DID YOU DO ANY OF THIS WORK DURING    355 - 356       THE LAST 4 WEEKS?
         'PXNATVTY': 'Demographic', # COUNTRY OF BIRTH
     }
 }
+
+# Re-categorize the variables into broader categories using this map.
+category_category_new_mapping = {
+'Digital access' : {"Digital access"}, # To split
+'Online activities': {"Online activities"},
+"Wealth related":{"Financial", "Work", "House"}, # Wealth-related
+"Safety": {"Safety"}, #
+"Personal Characteristics":{"Demography", "Disability"} # Personal characteristics (Demography, disability)
+}
+
+for variables in feat_dict:
+    for col in feat_dict[variables]:
+        for category in category_category_new_mapping:
+            if feat_dict[variables][col] in category_category_new_mapping[category]:
+                feat_dict[variables][col] = category
 

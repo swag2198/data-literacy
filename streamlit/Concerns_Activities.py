@@ -16,16 +16,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-import sys; sys.path.append('../')  # to import src
+import sys 
 
+sys.path.append('../')
+
+#sys.path.append('../')  # to import src
 
 # In[8]:
 
 
 from src import maps
 
+
 pd.set_option('display.max_columns', 100)
 # plt.style.use('ggplot')
+
+
+import tueplots
+from tueplots import bundles
+
+# this provides the color palette of Uni Tuebingen
+from tueplots.constants.color import rgb
+# e.g. as rgb.tue_blue, rgb.tue_red, etc.
 
 
 # In[17]:
@@ -42,7 +54,6 @@ CSV_FILE_PATH = os.path.join(DATA_DIR, os.path.join(year, f'nov{year[2:]}pub.csv
 
 
 # In[19]:
-
 
 PERSONTYPE = 'PRPERTYP'
 SEX = 'PESEX'
@@ -68,6 +79,16 @@ CONCERNS_MAP = {
     'HEPSCON8': 'Other concerns'
 }
 
+CONCERNS_LABELS_FOR_PLOTS = {
+    'HEPSCON1': 'Identity\ntheft',
+    'HEPSCON2': 'Financial\nfraud',
+    'HEPSCON3': 'Data\ncollection\nby online services',
+    'HEPSCON4': 'Data\ncollection\nby government',
+    'HEPSCON5': 'Credentials\nloss',
+    'HEPSCON6': 'Harassment',
+    'HEPSCON8': 'Other\nconcerns'
+}
+
 # During the past year, have concerns about privacy or security STOPPED (you/anyone in this household)
 # from doing any of these activities online
 ACTIVITIES_MAP = {
@@ -76,6 +97,15 @@ ACTIVITIES_MAP = {
     'HEPSPRE3': 'Posting photos, status updates, or other information on social networks?',
     'HEPSPRE4': 'Expressing an opinion on a controversial or political issue on a blog or social network, or in a forum, email or any other venue?',
     'HEPSPRE5': 'Searching for information using a platform such as Google Search, Yahoo Search, Microsoft Bing, or another web search engine?'
+}
+
+ACTIVITY_LABELS_FOR_PLOTS = {
+    'HEPSPRE1': 'Financial\ntransactions\nonline',
+    'HEPSPRE2': 'Buying goods\nor services\nonline',
+    'HEPSPRE3': 'Posting\nphotos/status\nupdates',
+    'HEPSPRE4': 'Opinion on\ncontroversial\nissues',
+    'HEPSPRE5': 'Using web\nsearch\nengines'
+ 
 }
 
 CONCERNS = list(CONCERNS_MAP.keys())
@@ -108,7 +138,117 @@ query_string1 = ' or '.join([f'{item} == 1' for item in [f'HEPSCON{i}' for i in 
 query_string2 = ' or '.join([f'{item} == 1' for item in [f'HEPSPRE{i}' for i in [1,2,3,4,5]]])     #activities
 
 
-# In[37]:
+
+cybercrime = df21.query('HEPSCYBA != -1')[[CYBERCRIME, SEX]]
+count_sex = cybercrime.value_counts().reset_index()
+
+def crime_plot():
+    xpos = ['YES', 'NO']
+    male_yn = [count_sex.query('PESEX == 1 and HEPSCYBA == 1')['count'].iloc[0],
+            count_sex.query('PESEX == 1 and HEPSCYBA == 2')['count'].iloc[0]
+            ]
+    female_yn = [count_sex.query('PESEX == 2 and HEPSCYBA == 1')['count'].iloc[0],
+            count_sex.query('PESEX == 2 and HEPSCYBA == 2')['count'].iloc[0]
+            ]
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False),
+                        **tueplots.axes.lines()
+                        }):
+        
+        fig, ax = plt.subplots()
+        b = ax.bar(xpos, male_yn, color=rgb.tue_blue, ec="black", width=0.65, label="Males")
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center")
+        
+        b = ax.bar(xpos, female_yn, bottom=male_yn, color=rgb.tue_red, ec="black", width=0.65, label= "Females")
+        ax.bar_label(b, padding=0, color = 'w', fontsize = 'small', label_type="center")
+        
+        total = np.array(male_yn) + np.array(female_yn)
+        for i, p in enumerate(total):
+            ax.text(xpos[i], total[i]+1500, f"{total[i]}", ha='center', fontsize='small')
+        
+        
+        ax.grid(True, color = "lightgrey", ls = ":")
+        ax.set_xlabel("Affected by an online security breach,\nidentity theft, or a similar crime?")
+        ax.legend(loc = 'upper left', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.set_ylabel("Number of responders")
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+
+        return fig
+
+
+
+sort_dict = lambda x: dict(sorted(x.items(), key=lambda item: -item[1]))
+
+concerns_size = sort_dict({concern: df21.query(f'{concern} == 1').shape[0] for concern in CONCERNS})
+activities_size = sort_dict({activity: df21.query(f'{activity} == 1').shape[0] for activity in ACTIVITIES})
+
+def distribution_concerns():
+    # xpos = np.arange(len(activities_size))
+    xpos = concerns_size.keys()
+    xpos = [CONCERNS_LABELS_FOR_PLOTS[item] for item in xpos]
+    counts_concern = list(concerns_size.values())
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False), **tueplots.axes.lines()}):
+        fig, ax = plt.subplots()
+        b = ax.bar(xpos, counts_concern, color=rgb.tue_blue, ec="black", width=0.69)#, label="Responded Yes")
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center")
+        
+        pcts = np.array(counts_concern) / df21.shape[0]
+        for i, p in enumerate(pcts):
+            ax.text(xpos[i], counts_concern[i]+500, f"{p*100:.2f}%", ha='center', fontsize='small')
+        
+        ax.grid(True, color = "lightgrey", ls = ":")
+        ax.set_xlabel("Prevalent digital concerns in the US population")
+        # ax.legend(loc = 'upper right', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.set_ylabel("Number of\nyes responders")
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+        
+        
+        return fig
+    
+def distribution_activities():
+    # xpos = np.arange(len(activities_size))
+    xpos = activities_size.keys()
+    xpos = [ACTIVITY_LABELS_FOR_PLOTS[item] for item in xpos]
+    counts_concern = list(activities_size.values())
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False), **tueplots.axes.lines()}):
+        fig, ax = plt.subplots()
+        b = ax.bar(xpos, counts_concern, color=rgb.tue_blue, ec="black", width=0.65)#, label="Responded Yes")
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center")
+        
+        b1 = ax.bar([xpos[3]], [counts_concern[3]], color=rgb.tue_violet, ec='black', width=0.65)
+        ax.bar_label(b1, padding=0, color='w', fontsize='small', label_type="center")
+        
+        b1 = ax.bar([xpos[0]], [counts_concern[0]], color=rgb.tue_lightblue, ec='black', width=0.65)
+        ax.bar_label(b1, padding=0, color='w', fontsize='small', label_type="center")
+        
+        pcts = np.array(counts_concern) / df21.shape[0]
+        for i, p in enumerate(pcts):
+            ax.text(xpos[i], counts_concern[i]+250, f"{p*100:.2f}%", ha='center', fontsize='small')
+        
+        ax.grid(True, color = "lightgrey", ls = ":")
+        ax.set_xlabel("Online activities that people hesitate to do")
+        # ax.legend(loc = 'upper right', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.set_ylabel("Number of\nyes responders")
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+        
+        plt.savefig(f"../res/figures/activity_distribution_{year}.pdf")
+
+        return fig
+    
+
+
+
 
 
 columnsmapa= {
@@ -152,8 +292,6 @@ education_groups = maps.educ  # education_educationid_mapping
 industry_groups = maps.ind    # industry_jobid_mapping
 
 
-# In[38]:
-
 
 def stratified_proportions(df,
                            stratify_by,      # age, income, education or job industry
@@ -191,42 +329,357 @@ def stratified_proportions(df,
         
     return stratified_output_count_normalized, sample_sizes
 
+
+# In[38]:
+
+def finTrans_contrOpinion(divide_by,graph_label):
+
+        # call
+    res, sample_sizes = stratified_proportions(df21, stratify_by=divide_by[0],
+                                categories_dict=divide_by[1],
+                                target_variables=ACTIVITIES)
+
+    xpos = list(res.keys())
+    X = np.arange(len(xpos))
+
+    fins = np.array([res[key][0] for key in xpos])
+    fins = np.around(fins,4)
+    fins_no = [round(res[key][0]*sample_sizes[key][0]) for key in xpos]
+
+    opin = np.array([res[key][3] for key in xpos])
+    opin = np.around(opin,4)
+
+    opin_no = [round(res[key][3]*sample_sizes[key][3]) for key in xpos]
+
+    # X, xpos, opin
+
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False), **tueplots.axes.lines()}):
+        fig, ax = plt.subplots()
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+        
+        # Add grid and axis labels
+        ax.grid(True, color = "lightgrey", ls = ":")
+        
+        # We specify the width of the bar
+        width = 0.35
+        
+        # Fouls conceded
+        b = ax.bar(
+            X, 
+            fins, 
+            ec = "black", 
+            lw = .75,
+            color = rgb.tue_lightblue, 
+            zorder = 3, 
+            width = width,
+            label = "financial transactions"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+
+        b = ax.bar(
+            X + width, 
+            opin, 
+            ec = "black", 
+            lw = .75, 
+            color = rgb.tue_violet, 
+            zorder = 3, 
+            width = width,
+            label = "controversial opinions"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+        
+        
+        # Adjust ticks
+        xticks_ = ax.xaxis.set_ticks(
+            ticks = X + width/2,
+            labels = xpos,
+            rotation = 15
+        )
+        
+        ax.set_xlabel(graph_label)
+        ax.legend(loc = 'upper right', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.legend(
+            ncol = 2, 
+            loc = "upper right", 
+            framealpha=1.0, facecolor='white', edgecolor='none',
+            
+            bbox_to_anchor = (0.95, 1.2),
+            # frameon = False
+        )
+        ax.set_ylabel("Probability of responding yes\ngiven a person belongs\nto a certain group")
+        
+        # plt.savefig(f"../res/figures/income_bar_{year}.pdf")
+        return fig
+    
+def onlineShop_postingPics(divide_by,graph_label):
+        # call
+    res, sample_sizes = stratified_proportions(df21, stratify_by=divide_by[0],
+                                categories_dict=divide_by[1],
+                                target_variables=ACTIVITIES)
+
+    xpos = list(res.keys())
+    X = np.arange(len(xpos))
+
+    online_shopping = np.array([res[key][1] for key in xpos])
+    online_shopping = np.around(online_shopping,4)
+    online_shopping_no = [round(res[key][1]*sample_sizes[key][1]) for key in xpos]
+
+    post_photo = np.array([res[key][2] for key in xpos])
+    post_photo = np.around(post_photo,4)
+
+    post_photo_no = [round(res[key][2]*sample_sizes[key][2]) for key in xpos]
+
+    # X, xpos, post_photo
+
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False), **tueplots.axes.lines()}):
+        fig, ax = plt.subplots()
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+        
+        # Add grid and axis labels
+        ax.grid(True, color = "lightgrey", ls = ":")
+        
+        # We specify the width of the bar
+        width = 0.35
+        
+        # Fouls conceded
+        b = ax.bar(
+            X, 
+            online_shopping, 
+            ec = "black", 
+            lw = .75,
+            color = rgb.tue_lightblue, 
+            zorder = 3, 
+            width = width,
+            label = "Online shpping"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+
+        b = ax.bar(
+            X + width, 
+            post_photo, 
+            ec = "black", 
+            lw = .75, 
+            color = rgb.tue_violet, 
+            zorder = 3, 
+            width = width,
+            label = "Posting photos"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+        
+        
+        # Adjust ticks
+        xticks_ = ax.xaxis.set_ticks(
+            ticks = X + width/2,
+            labels = xpos,
+            rotation = 15
+        )
+        
+        ax.set_xlabel(graph_label)
+        ax.legend(loc = 'upper right', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.legend(
+            ncol = 2, 
+            loc = "upper right", 
+            framealpha=1.0, facecolor='white', edgecolor='none',
+            
+            bbox_to_anchor = (0.95, 1.2),
+            # frameon = False
+        )
+        ax.set_ylabel("Probability of responding yes\ngiven a person belongs\nto a certain group")
+        
+        # plt.savefig(f"../res/figures/income_bar_{year}.pdf")
+        return fig
+    
+def dataTr_govtColl(divide_by,graph_label):
+        # call
+    res, sample_sizes = stratified_proportions(df21, stratify_by=divide_by[0],
+                                categories_dict=divide_by[1],
+                                target_variables=CONCERNS)
+
+    xpos = list(res.keys())
+    X = np.arange(len(xpos))
+
+    data_tracking = np.array([res[key][2] for key in xpos])
+    data_tracking = np.around(data_tracking,4)
+    data_tracking_no = [round(res[key][2]*sample_sizes[key][2]) for key in xpos]
+
+    gov_data = np.array([res[key][3] for key in xpos])
+    gov_data = np.around(gov_data,4)
+
+    gov_data_no = [round(res[key][3]*sample_sizes[key][3]) for key in xpos]
+
+    # X, xpos, gov_data
+
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False), **tueplots.axes.lines()}):
+        fig, ax = plt.subplots()
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+        
+        # Add grid and axis labels
+        ax.grid(True, color = "lightgrey", ls = ":")
+        
+        # We specify the width of the bar
+        width = 0.35
+        
+        # Fouls conceded
+        b = ax.bar(
+            X, 
+            data_tracking, 
+            ec = "black", 
+            lw = .75,
+            color = rgb.tue_lightblue, 
+            zorder = 3, 
+            width = width,
+            label = "Data tracking"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+
+        b = ax.bar(
+            X + width, 
+            gov_data, 
+            ec = "black", 
+            lw = .75, 
+            color = rgb.tue_violet, 
+            zorder = 3, 
+            width = width,
+            label = "Govt. data collection"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+        
+        
+        # Adjust ticks
+        xticks_ = ax.xaxis.set_ticks(
+            ticks = X + width/2,
+            labels = xpos,
+            rotation = 15
+        )
+        
+        ax.set_xlabel(graph_label)
+        ax.legend(loc = 'upper right', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.legend(
+            ncol = 2, 
+            loc = "upper right", 
+            framealpha=1.0, facecolor='white', edgecolor='none',
+            
+            bbox_to_anchor = (0.95, 1.2),
+            # frameon = False
+        )
+        ax.set_ylabel("Probability of responding yes\ngiven a person belongs\nto a certain group")
+        
+        # plt.savefig(f"../res/figures/income_bar_{year}.pdf")
+        return fig
+    
+def idTheft_cyberHarr(divide_by,graph_label):
+        # call
+    res, sample_sizes = stratified_proportions(df21, stratify_by=divide_by[0],
+                                categories_dict=divide_by[1],
+                                target_variables=CONCERNS)
+
+    xpos = list(res.keys())
+    X = np.arange(len(xpos))
+
+    identity_theft = np.array([res[key][0] for key in xpos])
+    identity_theft = np.around(identity_theft,3)
+    identity_theft_no = [round(res[key][0]*sample_sizes[key][0]) for key in xpos]
+
+    cyber_harras = np.array([res[key][5] for key in xpos])
+    cyber_harras = np.around(cyber_harras,3)
+
+    cyber_harras_no = [round(res[key][5]*sample_sizes[key][5]) for key in xpos]
+
+    # X, xpos, cyber_harras
+
+
+    with plt.rc_context({**bundles.icml2022(column='half', nrows=1, ncols=1, usetex=False), **tueplots.axes.lines()}):
+        fig, ax = plt.subplots()
+        
+        # Add spines
+        ax.spines["top"].set(visible = False)
+        ax.spines["right"].set(visible = False)
+        
+        # Add grid and axis labels
+        ax.grid(True, color = "lightgrey", ls = ":")
+        
+        # We specify the width of the bar
+        width = 0.35
+        
+        # Fouls conceded
+        b = ax.bar(
+            X, 
+            identity_theft, 
+            ec = "black", 
+            lw = .75,
+            color = rgb.tue_lightblue, 
+            zorder = 3, 
+            width = width,
+            label = "Identity theft"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+
+        b = ax.bar(
+            X + width, 
+            cyber_harras, 
+            ec = "black", 
+            lw = .75, 
+            color = rgb.tue_violet, 
+            zorder = 3, 
+            width = width,
+            label = "Cyber harrassment"
+        )
+        ax.bar_label(b, padding=0, color = 'w', fontsize='small', label_type="center", rotation=90)
+        
+        
+        # Adjust ticks
+        xticks_ = ax.xaxis.set_ticks(
+            ticks = X + width/2,
+            labels = xpos,
+            rotation = 15
+        )
+        
+        ax.set_xlabel(graph_label)
+        ax.legend(loc = 'upper right', framealpha=1.0, facecolor='white', edgecolor='none')
+        ax.legend(
+            ncol = 2, 
+            loc = "upper right", 
+            framealpha=1.0, facecolor='white', edgecolor='none',
+            
+            bbox_to_anchor = (0.95, 1.2),
+            # frameon = False
+        )
+        ax.set_ylabel("Probability of responding yes\ngiven a person belongs\nto a certain group")
+        
+        # plt.savefig(f"../res/figures/income_bar_{year}.pdf")
+        return fig
 # In[48]:
 
 
 activities_graph_functions = {
     'People affected by cyber crime' : 'HEPSCYBA',
-    'What people hesitate to do stratified by annual income levels' : 'HEFAMINC',
-    'What people hesitate to do stratified by education groups' : 'PEEDUCA',
-    'What people hesitate to do stratified by age' : 'PRTAGE'
-    
+    'Finanical transactions and Controversial opinions: Annual income levels' : 'HEFAMINC',
+    'Finanical transactions and Controversial opinions: Education groups' : 'PEEDUCA',
+    'Finanical transactions and Controversial opinions: Age' : 'PRTAGE',
+    'Online shopping and Posting photos: Annual income levels' : 'HEFAMINC',
+    'Online shopping and Posting photos: Education groups' : 'PEEDUCA',
+    'Online shopping and Posting photos: Age' : 'PRTAGE'
 }
 
 concerns_graph_functions = {
-    'What are people concerned about stratified by annual income levels' : 'HEFAMINC',
-    'What are people concerned about stratified by education groups' : 'PEEDUCA',
-    'What are people concerned about stratified by age' : 'PRTAGE'
-}
-
-attribute_to_group = {
-    'PEEDUCA' : education_groups,
-    'HEFAMINC' : income_groups,
-    'PRTAGE' : age_groups
-    
-}
-
-activities_graph_functions = {
-    'People affected by cyber crime' : 'HEPSCYBA',
-    'What people hesitate to do stratified by annual income levels' : 'HEFAMINC',
-    'What people hesitate to do stratified by education groups' : 'PEEDUCA',
-    'What people hesitate to do stratified by age' : 'PRTAGE'
-    
-}
-
-concerns_graph_functions = {
-    'What are people concerned about stratified by annual income levels' : 'HEFAMINC',
-    'What are people concerned about stratified by education groups' : 'PEEDUCA',
-    'What are people concerned about stratified by age' : 'PRTAGE'
+    'Data tracking and Govt. data collection: Annual income levels' : 'HEFAMINC',
+    'Data tracking and Govt. data collection: Education groups' : 'PEEDUCA',
+    'Data tracking and Govt. data collection: Age groups' : 'PRTAGE',
+    'Identity theft and Cyber harrassment: Annual income levels' :  'HEFAMINC',
+    'Identity theft and Cyber harrassment: Education groups' : 'PEEDUCA',
+    'Identity theft and Cyber harrassment: Age groups' : 'PRTAGE',
 }
 
 attribute_to_group = {
@@ -242,59 +695,73 @@ def generate_graph(selected_option):
     if selected_option in activities_graph_functions or selected_option in concerns_graph_functions:
         
         if selected_option == 'People affected by cyber crime' : 
+            
+            
+            st.pyplot(crime_plot())
+            
+        elif selected_option == 'Finanical transactions and Controversial opinions: Annual income levels':
+            divide_by = ['HEFAMINC', income_groups]
+            graph_label='Income groups in the population'
+            st.pyplot(finTrans_contrOpinion(divide_by,graph_label))
+
+        elif selected_option == 'Finanical transactions and Controversial opinions: Education groups':
+            divide_by = ['PEEDUCA', education_groups]
+            graph_label='Education levels in the population'
+            st.pyplot(finTrans_contrOpinion(divide_by,graph_label))
+
+        elif selected_option == 'Finanical transactions and Controversial opinions: Age':
+            divide_by = ['PRTAGE', age_groups]
+            graph_label='Age groups in the population'
+            st.pyplot(finTrans_contrOpinion(divide_by,graph_label))
+
+        elif selected_option == 'Online shopping and Posting photos: Annual income levels':
+            divide_by = ['HEFAMINC', income_groups]
+            graph_label='Income groups in the population'
+            st.pyplot(onlineShop_postingPics(divide_by,graph_label))
+
+        elif selected_option == 'Online shopping and Posting photos: Education groups':
+            divide_by = ['PEEDUCA', education_groups]
+            graph_label='Education levels in the population'
+            st.pyplot(onlineShop_postingPics(divide_by,graph_label))
+
+        elif selected_option == 'Online shopping and Posting photos: Age':
+            divide_by = ['PRTAGE', age_groups]
+            graph_label='Age groups in the population'
+            st.pyplot(onlineShop_postingPics(divide_by,graph_label))
+
+        elif selected_option == 'Data tracking and Govt. data collection: Annual income levels':
+            divide_by = ['HEFAMINC', income_groups]
+            graph_label='Income groups in the population'
+            st.pyplot(dataTr_govtColl(divide_by,graph_label))
+
+        elif selected_option == 'Data tracking and Govt. data collection: Education groups':
+            divide_by = ['PEEDUCA', education_groups]
+            graph_label='Education levels in the population'
+            st.pyplot(dataTr_govtColl(divide_by,graph_label))
+
+        elif selected_option == 'Data tracking and Govt. data collection: Age groups':
+            divide_by = ['PRTAGE', age_groups]
+            graph_label='Age groups in the population'
+            st.pyplot(dataTr_govtColl(divide_by,graph_label))
+
+        elif selected_option == 'Identity theft and Cyber harrassment: Annual income levels':
+            divide_by = ['HEFAMINC', income_groups]
+            graph_label='Income groups in the population'
+            st.pyplot(idTheft_cyberHarr(divide_by,graph_label))
+
+        elif selected_option == 'Identity theft and Cyber harrassment: Education groups':
+            divide_by = ['PEEDUCA', education_groups]
+            graph_label='Education levels in the population'
+            st.pyplot(idTheft_cyberHarr(divide_by,graph_label))
     
-            df21.query('HEPSCYBA != -1')[CYBERCRIME].value_counts().plot(kind='bar')
-            st.pyplot(plt)
-            
-        else :
-            
-            if selected_option in activities_graph_functions:
-            
-                attribute = activities_graph_functions[selected_option]
-                target_var = ACTIVITIES
-                column_names = {
-                    0: 'financial transactions',
-                    1: 'online shopping',
-                    2: 'posting photos, status updates',
-                    3: 'expressing controversial opinions',
-                    4: 'searching on google, yahoo, bing'
-                }
-            
-            else:
-                
-                attribute = concerns_graph_functions[selected_option]
-                target_var = CONCERNS
-                column_names = {
-                    0: 'Identity theft',
-                    1: 'Credit card or banking fraud',
-                    2: 'Data collection or tracking by online services',
-                    3: 'Data collection or tracking by government',
-                    4: 'Loss of control over personal data',
-                    5: 'Online threats/cyberbullying',
-                    6: 'Other concerns',
-                }
-                
-            #Common code here:
-            attribute_group = attribute_to_group[attribute]
-            res, sample_sizes = stratified_proportions(df21, stratify_by=attribute,
-                                         categories_dict=attribute_group,
-                                         target_variables=target_var)
+        elif selected_option == 'Identity theft and Cyber harrassment: Age groups':
+            divide_by = ['PRTAGE', age_groups]
+            graph_label='Age groups in the population'
+            st.pyplot(idTheft_cyberHarr(divide_by,graph_label))
 
-            df = pd.DataFrame.from_dict(res, orient='index')
-            df = df.rename(columns= column_names)
-
-
-
-            # Plot the DataFrame
-            ax = df.plot(kind='bar')
-            ax.set_title(selected_option, color='black')
-            ax.legend(bbox_to_anchor=(1.0, 1.0))
-            ax.plot()
+        else:
+            st.write("Invalid")
             
-            st.pyplot(plt)
-            
-        
-        
     else:
         st.error("Invalid option")
             

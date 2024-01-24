@@ -111,7 +111,6 @@ ACTIVITY_LABELS_FOR_PLOTS = {
 CONCERNS = list(CONCERNS_MAP.keys())
 ACTIVITIES = list(ACTIVITIES_MAP.keys())
 
-CONCERNS_AND_ACTIVITIES = CONCERNS+ACTIVITIES
 
 
 DROP_COLUMNS = [
@@ -342,20 +341,34 @@ def fourBars(selected_options,divide_by,graph_labels):
     #graph_labels = [legend of bar1....n, Title of the plot]
 
         # call
-    res, sample_sizes = stratified_proportions(df21, stratify_by=divide_by[0],
+    res_act, sample_sizes_act = stratified_proportions(df21, stratify_by=divide_by[0],
                                 categories_dict=divide_by[1],
-                                target_variables=CONCERNS_AND_ACTIVITIES)
+                                target_variables=ACTIVITIES)
+    
+    res_con, sample_sizes_con = stratified_proportions(df21, stratify_by=divide_by[0],
+                                categories_dict=divide_by[1],
+                                target_variables=CONCERNS)
+    
 
-    xpos = list(res.keys())
+
+    xpos = list(res_act.keys())
     X = np.arange(len(xpos))
 
     problem_list = []
 
-    for i in range(len(selected_options)):
-        fins = np.array([res[key][selected_options[i]] for key in xpos])
-        fins = np.around(fins,4)
-        fins_no = [round(res[key][selected_options[i]]*sample_sizes[key][selected_options[i]]) for key in xpos]
-        problem_list.append(fins)
+    for option in selected_options:
+
+        if option <=4:
+            fins = np.array([res_act[key][option] for key in xpos])
+            fins = np.around(fins,4)
+            fins_no = [round(res_act[key][option]*sample_sizes_act[key][option]) for key in xpos]
+            problem_list.append(fins)
+        
+        else:
+            fins = np.array([res_con[key][option-5] for key in xpos])
+            fins = np.around(fins,4)
+            fins_no = [round(res_con[key][option-5]*sample_sizes_con[key][option-5]) for key in xpos]
+            problem_list.append(fins)
 
     # X, xpos, opin
 
@@ -436,12 +449,12 @@ activity_index= {
     'Posting photos, status updates' : 2,
     'Expressing controversial opinions' : 3,
     'Searching on google, yahoo, bing' : 4,
-    'Identity theft' : 0,
-    'Credit card fraud': 1, 
-    'Data tracking': 2,
-    'Govt. data collection': 3,
-    'Losing digital credentials': 4,
-    'Cyber harrassment': 5,
+    'Identity theft' : 5, #0
+    'Credit card fraud': 6, #1
+    'Data tracking': 7, #2
+    'Govt. data collection': 8, #3
+    'Losing digital credentials': 9, #4
+    'Cyber harrassment': 10, #5
 
 }
 

@@ -9,3 +9,6 @@ xgboost==2.0.3
 bayesian-optimization==1.4.3
 seaborn==0.13.1
 tueplots==0.0.12
+requests==2.31.0
+beautifulsoup4==4.12.3
+kaleido==0.2.1

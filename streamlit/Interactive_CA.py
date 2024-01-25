@@ -501,13 +501,15 @@ def main():
      'Losing digital credentials','Cyber harrassment',],
      max_selections=3)
     
-    if len(options)!=0:
+    with st.sidebar:
+    
         stratify_by = st.radio(
         "Stratify by:",
         ["Income :moneybag:", "Education :female-student:", "Age :man-boy:"],
         
         )
 
+    if len(options)!=0 and stratify_by!=None:
         generate_graph(options, stratify_by)
 
     else:

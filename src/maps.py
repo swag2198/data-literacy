@@ -4,6 +4,8 @@ Also contains some useful constants that hold important column names.
 
 """
 
+from tueplots.constants.color import rgb
+
 PERSONTYPE = 'PRPERTYP'
 SEX = 'PESEX'
 AGE = 'PRTAGE'
@@ -582,7 +584,7 @@ category_category_new_mapping = {
 'Online activities': {"Online activities"},
 "Wealth related":{"Financial", "Work", "House"}, # Wealth-related
 "Safety": {"Safety"}, #
-"Personal Characteristics":{"Demography", "Disability"} # Personal characteristics (Demography, disability)
+"Personal Characteristics":{"Demographic", "Disability"} # Personal characteristics (Demography, disability)
 }
 
 for variables in feat_dict:

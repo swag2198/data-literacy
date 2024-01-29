@@ -1,26 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[7]:
-
-
-import os, re, json, requests
-import PyPDF2
-import urllib.request
-from bs4 import BeautifulSoup
-from scipy import stats
-
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
-
 import sys 
-
-
-
-# In[8]:
 
 
 from src import maps
@@ -39,15 +21,9 @@ from tueplots.constants.color import rgb
 
 
 
-
-# In[18]:
-
-
 year = '2021'
 CSV_FILE_PATH = 'https://www2.census.gov/programs-surveys/cps/datasets/2021/supp/nov21pub.csv'
 
-
-# In[19]:
 
 PERSONTYPE = 'PRPERTYP'
 SEX = 'PESEX'
@@ -112,7 +88,6 @@ DROP_COLUMNS = [
 ]
 
 
-# In[20]:
 
 @st.cache_resource
 def download_dataset():
@@ -124,9 +99,6 @@ def download_dataset():
 df21 = download_dataset()
 
 columns = features = df21.columns.to_list()
-
-
-# In[21]:
 
 
 query_string1 = ' or '.join([f'{item} == 1' for item in [f'HEPSCON{i}' for i in [1,2,3,4,5,6,8]]]) #concerns
@@ -204,7 +176,6 @@ def distribution_concerns():
         ax.spines["top"].set(visible = False)
         ax.spines["right"].set(visible = False)
         
-        
         return fig
     
 def distribution_activities():
@@ -236,8 +207,6 @@ def distribution_activities():
         # Add spines
         ax.spines["top"].set(visible = False)
         ax.spines["right"].set(visible = False)
-        
-        plt.savefig(f"../res/figures/activity_distribution_{year}.pdf")
 
         return fig
     
@@ -305,7 +274,6 @@ def stratified_proportions(df,
             query_string = ' or '.join([f'{v} == {gid}' for gid in groupids])
         else:
             query_string = f'{v} >= {groupids[0]} and {v} <= {groupids[1]}'
-        # print(groupname)
         _df = df.query(query_string)[target_variables]
         
         props = []  # props[i] = proportion for target variable i
@@ -314,8 +282,6 @@ def stratified_proportions(df,
             # Take 1 target variable and find the proportion of people who responded as 1 (yes)
             _df1 = _df[[tv]]
             _df1 = _df1[_df1[tv] != -1]  # remove the -1 responses (only keep 1 or 2)
-#             print(f'total #samples in this group for {tv} (Yes/No) = {_df1.shape[0]}')
-#             print(f'yes: {_df1.value_counts()[1]}, no: {_df1.value_counts()[2]}; proportion: {_df1.value_counts(normalize=True)[1]:.4f}')
             props.append(_df1.value_counts(normalize=True)[1])
             sample_size.append(_df1.shape[0])
         
@@ -324,8 +290,6 @@ def stratified_proportions(df,
         
     return stratified_output_count_normalized, sample_sizes
 
-
-# In[38]:
 
 
 def fourBars(selected_options,divide_by,graph_labels):
@@ -425,7 +389,6 @@ def fourBars(selected_options,divide_by,graph_labels):
         ax.set_ylabel("Probability of responding yes\ngiven a person belongs\nto a certain group", fontsize=10)
 
         return fig
-# In[48]:
 
 
 
@@ -479,7 +442,6 @@ def generate_graph(selected_options, stratify_by):
    
 
 
-# In[49]:
 
 
 # Streamlit app
@@ -512,10 +474,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# In[ ]:
-
 
 
 

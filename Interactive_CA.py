@@ -18,10 +18,7 @@ import streamlit as st
 
 import sys 
 
-sys.path.append('../')
 
-thisfile = os.path.abspath('Interactive_CA.py')
-if '/' in thisfile: os.chdir(os.path.dirname(thisfile))
 
 # In[8]:
 
@@ -44,7 +41,7 @@ from tueplots.constants.color import rgb
 # In[17]:
 
 
-DATA_DIR = os.path.join('..', 'dat')
+DATA_DIR = os.path.join('.', 'dat')
 
 
 # In[18]:

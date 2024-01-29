@@ -38,17 +38,13 @@ from tueplots.constants.color import rgb
 # e.g. as rgb.tue_blue, rgb.tue_red, etc.
 
 
-# In[17]:
-
-
-DATA_DIR = os.path.join('.', 'dat')
 
 
 # In[18]:
 
 
 year = '2021'
-CSV_FILE_PATH = os.path.join(DATA_DIR, os.path.join(year, f'nov{year[2:]}pub.csv'))
+CSV_FILE_PATH = 'https://www2.census.gov/programs-surveys/cps/datasets/2021/supp/nov21pub.csv'
 
 
 # In[19]:
@@ -119,13 +115,13 @@ DROP_COLUMNS = [
 # In[20]:
 
 @st.cache_resource
-def process_dataframe():
+def download_dataset():
     df21 = pd.read_csv(CSV_FILE_PATH)
     df21 = df21[(df21[AGE] >= 10) * (df21[SEX] != -1)]
     df21 = df21.drop(DROP_COLUMNS, axis=1)
     return df21
 
-df21 = process_dataframe()
+df21 = download_dataset()
 
 columns = features = df21.columns.to_list()
 

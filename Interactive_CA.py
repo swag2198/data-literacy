@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+st.set_page_config(layout="wide")
 import sys 
+import os
+import plotly.express as px
+import seaborn as sns
 
 
 from src import maps
@@ -438,7 +442,61 @@ def generate_graph(selected_options, stratify_by):
     
     st.pyplot(fourBars(selected_indices,divide_by=divide_by,graph_labels=selected_options+[divide_by[-1]]))  
 
+
+
+#CODE FOR FEATURE IMPORTANCE:
+
+# Manually define a color dictionary :(
+color_dict = {
+    'Digital access': '#1f77b4',  # blue
+    'Safety': '#ff7f0e',          # orange
+    'Work': '#2ca02c',            # green
+    'Financial': '#d62728',       # red
+    'House': '#9467bd',           # purple
+    'Demographic': '#8c564b',     # brown
+    'Unknown': '#e377c2',         # pink
+    'Disability': '#7f7f7f'       # gray
     
+} 
+
+#folder_path = 'E:/Machine Learning/Semester 1/Data literacy/Project/data/2021'
+path = os.path.join('./res', '2021_importance_plots')
+feat_dict = maps.feat_dict
+for variables in feat_dict:
+    for col in feat_dict[variables]:
+        for category in maps.category_category_new_mapping:
+            if feat_dict[variables][col] in maps.category_category_new_mapping[category]:
+                feat_dict[variables][col] = category
+
+# Function to generate and display the plot
+def display_plot(selected_choice, plot_type,map_dict):
+    var_name = selected_choice
+    csv_file = f'{var_name}.csv'  # Assuming the CSV file naming convention is consistent
+    importance_df = pd.read_csv(os.path.join(path, csv_file))
+
+    # Ensure the 'score' column is treated as numeric
+    importance_df['score'] = pd.to_numeric(importance_df['score'], errors='coerce')
+
+    # Sort the dataframe by 'score' in descending order and take the top 20 features
+    importance_df = importance_df.sort_values('score', ascending=False).head(20)
+
+    importance_df.rename(columns={'Unnamed: 0': 'features'}, inplace=True)
+    importance_df['category'] = importance_df['features'].map(feat_dict[var_name])
+
+    # Create the plot with Plotly
+    if plot_type == 'Bar Plot':
+        fig = px.bar(importance_df, x='score', y='features', color='category',
+                     hover_data=['features', 'score'], labels={'features': 'Feature', 'score': 'Score'},
+                     orientation='h', color_discrete_map=color_dict)
+    else:  # Bubble Plot
+        fig = px.scatter(importance_df, x='score', y='features', color='category',
+                         size='score', hover_data=['features', 'score'], labels={'features': 'Feature', 'score': 'Score'},
+                         color_discrete_map=color_dict)
+
+    fig.update_layout(title_text=f'Feature Importance for {var_name}: {map_dict[var_name][:25]}...',
+                      xaxis_title="Score", yaxis_title="Features")
+    st.plotly_chart(fig)
+
    
 
 
@@ -447,30 +505,63 @@ def generate_graph(selected_options, stratify_by):
 # Streamlit app
 def main():
     
-    
 
-    options = st.multiselect(
-    'Select online concerns and activities to show:',
-    ['Financial transactions', 'Online shopping', 'Posting photos, status updates', 
-     'Expressing controversial opinions','Searching on google, yahoo, bing',
-     'Identity theft','Credit card fraud', 'Data tracking','Govt. data collection',
-     'Losing digital credentials','Cyber harrassment',],
-     max_selections=3)
     
-    with st.sidebar:
+    tab1, tab2 = st.tabs(["Concerns and Activities", "Feature Importance",])
+
+    with tab1:
+
+        col1, col2 = st.columns(2, gap='small')
+
+        with col1:
+            stratify_by = st.radio(
+            "Stratify by:",
+            ["Income :moneybag:", "Education :female-student:", "Age :man-boy:"],
+            
+            )
+
+        with col2:  
+            options = st.multiselect(
+            'Select online concerns and activities to show:',
+            ['Financial transactions', 'Online shopping', 'Posting photos, status updates', 
+            'Expressing controversial opinions','Searching on google, yahoo, bing',
+            'Identity theft','Credit card fraud', 'Data tracking','Govt. data collection',
+            'Losing digital credentials','Cyber harrassment',],
+            max_selections=3, default='Financial transactions')
+            
+            
+            if len(options)!=0 and stratify_by!=None:
+                generate_graph(options, stratify_by)
+
+            else:
+                pass
     
-        stratify_by = st.radio(
-        "Stratify by:",
-        ["Income :moneybag:", "Education :female-student:", "Age :man-boy:"],
+    with tab2:
+
+        col1, col2 = st.columns(2, gap='small')
         
-        )
+        with col1:
+            # Option to select plot type
+            plot_type = st.radio("Select Plot Type:", ('Bar Plot', 'Bubble Plot'))
+            # Sidebar for user input
+            category_choice = st.radio("Choose a category:", ('Activity', 'Concern'))
 
-    if len(options)!=0 and stratify_by!=None:
-        generate_graph(options, stratify_by)
+        if category_choice == 'Activity':
+            map_dict = ACTIVITIES_MAP
+        else:  # Concern
+            map_dict = CONCERNS_MAP
 
-    else:
-        pass
-    
+        with col2:
+            selected_choice = st.selectbox(
+                "Choose an option:",
+                options=list(map_dict.keys()),
+                format_func=lambda x: map_dict[x]
+            )
+
+            # Display the selected plot
+            display_plot(selected_choice, plot_type,map_dict)
+        
+
 
 if __name__ == '__main__':
     main()

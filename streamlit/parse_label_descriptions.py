@@ -1,4 +1,4 @@
-with open("map_data.txt", 'r') as f:
+with open("streamlit/map_data.txt", 'r') as f:
     lines = f.readlines()
 
 # create a dictionary that maps variable names to their descriptions

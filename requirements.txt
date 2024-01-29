@@ -12,3 +12,4 @@ tueplots==0.0.12
 requests==2.31.0
 beautifulsoup4==4.12.3
 kaleido==0.2.1
+streamlit==1.30.0

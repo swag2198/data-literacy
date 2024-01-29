@@ -23,6 +23,8 @@ from tueplots import bundles
 from tueplots.constants.color import rgb
 # e.g. as rgb.tue_blue, rgb.tue_red, etc.
 
+sys.path.append("./streamlit/")
+from parse_label_descriptions import variable_description_map
 
 
 year = '2021'
@@ -459,7 +461,6 @@ color_dict = {
     
 } 
 
-#folder_path = 'E:/Machine Learning/Semester 1/Data literacy/Project/data/2021'
 path = os.path.join('./res', '2021_importance_plots')
 feat_dict = maps.feat_dict
 for variables in feat_dict:
@@ -476,24 +477,33 @@ def display_plot(selected_choice, plot_type,map_dict):
 
     # Ensure the 'score' column is treated as numeric
     importance_df['score'] = pd.to_numeric(importance_df['score'], errors='coerce')
-
+    
+    
+    
     # Sort the dataframe by 'score' in descending order and take the top 20 features
-    importance_df = importance_df.sort_values('score', ascending=False).head(20)
+    importance_df = importance_df.sort_values(by=['score'], ascending=False).head(20)
+    
+    importance_df["description"] = importance_df['Unnamed: 0'].apply(lambda x: variable_description_map[x])
 
     importance_df.rename(columns={'Unnamed: 0': 'features'}, inplace=True)
     importance_df['category'] = importance_df['features'].map(feat_dict[var_name])
 
+
     # Create the plot with Plotly
     if plot_type == 'Bar Plot':
         fig = px.bar(importance_df, x='score', y='features', color='category',
-                     hover_data=['features', 'score'], labels={'features': 'Feature', 'score': 'Score'},
+                     hover_data=['features','score','description'], labels={'features': 'Feature', 'score': 'Score', 'descripton':'Description'},
                      orientation='h', color_discrete_map=color_dict)
+        fig.update_xaxes(nticks=15, showgrid=True)
+        fig.update_layout(yaxis={'categoryorder':'total ascending'})
     else:  # Bubble Plot
         fig = px.scatter(importance_df, x='score', y='features', color='category',
-                         size='score', hover_data=['features', 'score'], labels={'features': 'Feature', 'score': 'Score'},
+                         size='score', hover_data=['features','score', 'description'], labels={'features': 'Feature', 'score': 'Score', 'descripton':'Description'},
                          color_discrete_map=color_dict)
+        fig.update_xaxes(nticks=15, showgrid=True)
+        fig.update_layout(yaxis={'categoryorder':'total ascending'})
 
-    fig.update_layout(title_text=f'Feature Importance for {var_name}: {map_dict[var_name][:25]}...',
+    fig.update_layout(title_text=f'Feature Importance for {var_name}',
                       xaxis_title="Score", yaxis_title="Features")
     st.plotly_chart(fig)
 
@@ -505,13 +515,13 @@ def display_plot(selected_choice, plot_type,map_dict):
 # Streamlit app
 def main():
     
-
+    st.header('Cautious Clicks: Analyzing the Perceived Risks on the Web', divider='grey')
     
     tab1, tab2 = st.tabs(["Concerns and Activities", "Feature Importance",])
 
     with tab1:
 
-        col1, col2 = st.columns(2, gap='small')
+        col1, col2 = st.columns([0.3,0.7], gap='small')
 
         with col1:
             stratify_by = st.radio(
@@ -538,7 +548,7 @@ def main():
     
     with tab2:
 
-        col1, col2 = st.columns(2, gap='small')
+        col1, col2 = st.columns([0.3,0.7], gap='small')
         
         with col1:
             # Option to select plot type

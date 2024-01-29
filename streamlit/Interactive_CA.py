@@ -20,7 +20,8 @@ import sys
 
 sys.path.append('../')
 
-#sys.path.append('../')  # to import src
+thisfile = os.path.abspath('Interactive_CA.py')
+if '/' in thisfile: os.chdir(os.path.dirname(thisfile))
 
 # In[8]:
 

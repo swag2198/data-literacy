@@ -3,6 +3,8 @@
 This repository is associated with the _Data Literacy_ course project, submitted to [Prof. Dr. Philipp Hennig](https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/methoden-des-maschinellen-lernens/personen/philipp-hennig/) at the Univerity of Tübingen for WS 23/24. We also 
 thank Tobias Weber (PhD student) for his helpful inputs and guidance throughout this project.
 
+[Link](https://github.com/swag2198/data-literacy/blob/main/tex/Weber_Baig_etal.pdf) to our pdf report, and on the streamlit webapp (can be found here: https://datalitproject1.streamlit.app/) you can see all the plots and figures.
+
 ## Abstract
 
 In this report, we study 
@@ -37,5 +39,5 @@ and Internet supplement dataset. Also the corresponding csv files for 2015, 2017
 
 
 ## Contacts
-If you find any issues or have any questions on our analysis, please feel free to raise an issue! 
+If you find any issues or have any questions on our analysis, please feel free to raise an issue or hit me up directly on [twitter](https://twitter.com/swagatam2198) or [LinkedIn](https://www.linkedin.com/in/swagatam-haldar-636a41232/)! 
 

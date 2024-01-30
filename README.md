@@ -20,11 +20,12 @@ and Internet supplement dataset. Also the corresponding csv files for 2015, 2017
 
 
 ## Repository structure
-- `/dat` contains the dataset documentation
-- `/exp` contains our methods, experiments, and analysis in separate notebooks
-- `/res` stores plots and csv files output as results
-- `/src` has attribute definitions, data stratification criteria, and our annotated labels for the coded features
-- `/streamlit` contains files related to the [streamlit application](https://datalitproject1.streamlit.app/)
+- `dat/` contains the dataset documentation
+- `exp/` contains our methods, experiments, and analysis in separate notebooks
+- `res/` stores plots and csv files output as results
+- `src/` has attribute definitions, data stratification criteria, and our annotated labels for the coded features
+- `streamlit/` contains files related to the [streamlit application](https://datalitproject1.streamlit.app/)
+- `tex/` contains LaTeX files for the report
 - `streamlit_app.py` file contains the streamlit code hosted on the steamlit public cloud.
 
 ## Reproducibility

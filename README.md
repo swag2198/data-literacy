@@ -1,6 +1,6 @@
 <h1 align="center">Cautious Clicks: Analyzing the Perceived Risks on the Web</h1>
 
-This repository is associated with the _Data Literacy_ course project, submitted to [Prof. Dr. Philipp Hennig](https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/methoden-des-maschinellen-lernens/personen/philipp-hennig/) at the Univerity of Tübingen for WS 23/24. We also 
+This repository is associated with the _Data Literacy_ course project, submitted to [Prof. Dr. Philipp Hennig](https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/methoden-des-maschinellen-lernens/personen/philipp-hennig/) at the University of Tübingen for WS 23/24. We also 
 thank Tobias Weber (PhD student) for his helpful inputs and guidance throughout this project.
 
 [Link](https://github.com/swag2198/data-literacy/blob/main/tex/Weber_Baig_etal.pdf) to our pdf report, and on the streamlit webapp (can be found here: https://datalitproject1.streamlit.app/) you can see all the plots and figures.
